@@ -1,0 +1,14 @@
+---
+- name: Update Jenkins server
+  hosts: jenkins_server
+  become: True
+  remote_user: adminuser
+
+  tasks:
+    - name: stop jenkins
+      service: name=jenkins state=stopped
+    - name: install latest package jenkins
+      apt:
+        name: jenkins state:latest
+    - name: start jenkins
+      service: name=jenkins enabled=yes state=started

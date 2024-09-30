@@ -1,0 +1,18 @@
+---
+- name: Update Gitlab server
+  hosts: gitlab_server
+  become: True
+  remote_user: adminuser
+
+  tasks:
+    - name: create a backup of gitlab_server
+      shell: sudo gitlab-rake gitlab:backup:create SKIP=registry
+    - name: update apt cache
+      apt:
+        update_cache: yes
+    - name: upgrade gitlab package
+      apt:
+        name: gitlab-ce
+        state: latest
+    - name: check gitlab service is running
+      service: name=gitlab-runsvdir enabled=yes state=started
